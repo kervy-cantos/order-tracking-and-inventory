@@ -1,0 +1,48 @@
+# Node modules
+node_modules/
+
+# Yarn (Berry) folders
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Yarn PnP files
+.pnp.*
+.pnpjs.json
+
+# Zero-installs (comment out if using it)
+!.yarn/cache
+
+# Environment variables
+.env
+.env.*.local
+
+# Build outputs
+dist/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage reports
+coverage/
+.nyc_output/
+
