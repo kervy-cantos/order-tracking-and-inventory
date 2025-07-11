@@ -3,7 +3,7 @@ name: Deploy to Railway
 on:
   push:
     branches:
-      - main # or change to your deployment branch
+      - main
 
 jobs:
   deploy:
@@ -13,8 +13,14 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
-      - name: 🧪 Install dependencies
-        run: yarn install --frozen-lockfile
+      - name: 🛠 Enable Corepack for Yarn v4
+        run: corepack enable
+
+      - name: 🧶 Set Yarn version
+        run: corepack prepare yarn@4.5.2 --activate
+
+      - name: 📦 Install dependencies
+        run: yarn install --immutable
 
       - name: 🚀 Deploy to Railway
         env:
