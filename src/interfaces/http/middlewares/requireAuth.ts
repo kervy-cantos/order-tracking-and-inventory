@@ -6,7 +6,7 @@ export function requireAuth(tokenService: TokenService) {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "Unauthorized", error: true });
     }
 
     const token = authHeader.split(" ")[1];
@@ -17,7 +17,9 @@ export function requireAuth(tokenService: TokenService) {
       req.user = payload;
       next();
     } catch {
-      return res.status(401).json({ message: "Invalid or expired token" });
+      return res
+        .status(401)
+        .json({ message: "Invalid or expired token", error: true });
     }
   };
 }
