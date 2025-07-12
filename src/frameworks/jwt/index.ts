@@ -22,4 +22,11 @@ export const JwtTokenService: TokenService = {
       throw new Error("Invalid or expired token");
     }
   },
+  verifyRefreshToken(token: string): AuthTokenPayload {
+    try {
+      return jwt.verify(token, jwtSecret) as AuthTokenPayload;
+    } catch {
+      throw new Error("Invalid or expired refresh token");
+    }
+  },
 };

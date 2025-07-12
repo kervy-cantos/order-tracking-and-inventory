@@ -11,6 +11,6 @@ export interface RegisterInput {
 
 export interface LoginInput {
   username: string;
-  password: string;
+  password?: string;
   provider?: Provider;
 }
