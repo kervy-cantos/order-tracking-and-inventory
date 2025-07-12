@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
 
 const categorySchema = new mongoose.Schema(
   {
@@ -9,3 +9,11 @@ const categorySchema = new mongoose.Schema(
 );
 
 export const CategoryModel = mongoose.model("Category", categorySchema);
+
+export interface CategoryDoc extends Document {
+  _id: mongoose.Types.ObjectId;
+  name: string;
+  description?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

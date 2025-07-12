@@ -6,6 +6,6 @@ export function createServer(dependencies: any): Express {
 
   app.use(express.json());
 
-  registerRoutes(app, dependencies);
+  registerRoutes(app);
   return app;
 }

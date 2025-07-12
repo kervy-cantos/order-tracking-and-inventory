@@ -9,7 +9,7 @@ import { deleteCategoryController } from "../controllers/category/delete";
 export default function categoryRouter() {
   const router = Router();
 
-  router.get("/all", async (req: Request, res: Response) => {
+  router.get("/", async (req: Request, res: Response) => {
     const response = await findAllController();
     res.status(response.status).json(response.body);
   });
