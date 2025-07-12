@@ -72,11 +72,7 @@ describe("loginUser", () => {
     userRepository.findByUsernameOrEmail.mockResolvedValue(socialUser);
 
     await expect(
-      loginUser(
-        { username: "testuser", password: "irrelevant" },
-        userRepository,
-        tokenService
-      )
+      loginUser({ username: "testuser" }, userRepository, tokenService)
     ).rejects.toThrow("Invalid credentials!");
   });
 

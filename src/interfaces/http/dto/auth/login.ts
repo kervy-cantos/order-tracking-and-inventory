@@ -1,5 +1,5 @@
 export interface LoginRequestDto {
   username: string;
-  password: string;
+  password?: string;
   provider: "local" | "google";
 }
