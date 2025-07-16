@@ -2,16 +2,23 @@ import { ControllerResponse } from "../../types/controller";
 import { findAllCategories } from "../../../../usecases/category/findCategory";
 import { categoryRepositoryImpl } from "../../../../frameworks/mongoose/repositories/impl/category";
 
-export async function findAllController(): Promise<ControllerResponse> {
+export async function findAllController(
+  page: number,
+  limit: number
+): Promise<ControllerResponse> {
   try {
-    const data = await findAllCategories(categoryRepositoryImpl);
+    const result = await findAllCategories(page, limit, categoryRepositoryImpl);
+
     return {
       status: 200,
       body: {
         message: "Categories fetched successfully",
-        data: {
-          data,
-        },
+        data: result.data,
+        total: result.total,
+        totalPages: result.totalPages,
+        resultCount: result.resultCount,
+        limit,
+        page,
       },
     };
   } catch (error) {

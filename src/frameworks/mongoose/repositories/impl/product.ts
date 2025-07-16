@@ -36,9 +36,23 @@ export const productRepositoryImpl: ProductRepository = {
     return mapToProduct(updated);
   },
 
-  async findAll() {
-    const docs = await ProductModel.find().populate("category");
-    return docs.map((doc) => mapToProduct(doc));
+  async findAll(page, limit) {
+    const skip = (page - 1) * limit;
+    const [docs, total] = await Promise.all([
+      ProductModel.find().skip(skip).limit(limit).populate("category"),
+      ProductModel.countDocuments(),
+    ]);
+    const data = docs.map((doc) => mapToProduct(doc));
+    if (page > Math.ceil(total / limit)) {
+      throw new Error("Page does not exist");
+    }
+    return {
+      data,
+      page: page,
+      total: total,
+      totalPages: limit <= 0 ? 1 : Math.ceil(total / limit),
+      resultCount: data.length,
+    };
   },
 
   async delete(id) {
@@ -48,12 +62,35 @@ export const productRepositoryImpl: ProductRepository = {
     return !!result;
   },
 
-  async findProductsByCategory(categoryId) {
-    if (!mongoose.Types.ObjectId.isValid(categoryId)) return [];
-    const products = await ProductModel.find({
-      category: categoryId,
-    }).populate("categories");
-    return products.map((doc) => mapToProduct(doc));
+  async findProductsByCategory(categoryId, page, limit) {
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      return {
+        data: [],
+        page: 0,
+        total: 0,
+        totalPages: 0,
+        resultCount: 0,
+      };
+    }
+    const skip = (page - 1) * limit;
+    const [docs, total] = await Promise.all([
+      ProductModel.find({ category: categoryId })
+        .skip(skip)
+        .limit(limit)
+        .populate("category"),
+      ProductModel.countDocuments({ category: categoryId }),
+    ]);
+    const data = docs.map((doc) => mapToProduct(doc));
+    if (page > Math.ceil(total / limit)) {
+      throw new Error("Page does not exist");
+    }
+    return {
+      data,
+      page: page,
+      total: total,
+      totalPages: limit <= 0 ? 1 : Math.ceil(total / limit),
+      resultCount: data.length,
+    };
   },
 };
 function mapToProduct(doc: any): Product {

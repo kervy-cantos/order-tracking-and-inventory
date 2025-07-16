@@ -9,7 +9,15 @@ export async function findCategoryById(
 }
 
 export async function findAllCategories(
+  page: number,
+  limit: number,
   repo: CategoryRepository
-): Promise<Category[]> {
-  return await repo.findAll();
+): Promise<{
+  data: Category[];
+  total: number;
+  totalPages: number;
+  resultCount: number;
+  page: number;
+}> {
+  return await repo.findAll(page, limit);
 }

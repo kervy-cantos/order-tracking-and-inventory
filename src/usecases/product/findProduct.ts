@@ -9,13 +9,29 @@ export async function findProductById(
 }
 
 export async function findAllProducts(
+  page: number,
+  limit: number,
   repo: ProductRepository
-): Promise<Product[]> {
-  return await repo.findAll();
+): Promise<{
+  data: Product[];
+  total: number;
+  totalPages: number;
+  resultCount: number;
+  page: number;
+}> {
+  return await repo.findAll(page, limit);
 }
 export async function findProductsByCategory(
   categoryId: string,
+  page: number,
+  limit: number,
   repo: ProductRepository
-): Promise<Product[]> {
-  return await repo.findProductsByCategory(categoryId);
+): Promise<{
+  data: Product[] | [];
+  total: number;
+  totalPages: number;
+  resultCount: number;
+  page: number;
+}> {
+  return await repo.findProductsByCategory(categoryId, page, limit);
 }

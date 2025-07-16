@@ -4,5 +4,10 @@ export interface ControllerResponse<T = unknown> {
     message: string;
     data?: T;
     error?: boolean;
+    total?: number;
+    totalPages?: number;
+    resultCount?: number;
+    limit?: number;
+    page?: number;
   };
 }

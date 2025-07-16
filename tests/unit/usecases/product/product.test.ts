@@ -83,6 +83,9 @@ describe("productCrud", () => {
     expect(result).toEqual(newProduct);
   });
   it("should return all products", async () => {
+    const testPage = 2;
+    const testLimit = 10;
+
     const mockProducts: Product[] = [
       {
         id: "1",
@@ -99,11 +102,19 @@ describe("productCrud", () => {
         updatedAt: new Date(),
       },
     ];
+    const testPaginatedResponse = {
+      data: mockProducts,
+      total: 50,
+      totalPages: Math.ceil(50 / testLimit),
+      resultCount: mockProducts.length,
+      limit: testLimit,
+      page: testPage,
+    };
 
-    mockRepo.findAll.mockResolvedValue(mockProducts);
+    mockRepo.findAll.mockResolvedValue(testPaginatedResponse);
 
-    const result = await findAllProducts(mockRepo);
-    expect(result).toEqual(mockProducts);
+    const result = await findAllProducts(testPage, testLimit, mockRepo);
+    expect(result).toEqual(testPaginatedResponse);
     expect(mockRepo.findAll).toHaveBeenCalled();
   });
   it("should return product when found", async () => {
@@ -120,6 +131,8 @@ describe("productCrud", () => {
     expect(result).toBeNull();
   });
   it("should return products for a given category", async () => {
+    const testPage = 2;
+    const testLimit = 10;
     const mockProducts: Product[] = [
       {
         id: "1",
@@ -136,13 +149,30 @@ describe("productCrud", () => {
         updatedAt: new Date(),
       },
     ];
+    const testPaginatedResponse = {
+      data: mockProducts,
+      total: 50,
+      totalPages: Math.ceil(50 / testLimit),
+      resultCount: mockProducts.length,
+      limit: testLimit,
+      page: testPage,
+    };
 
-    mockRepo.findProductsByCategory.mockResolvedValue(mockProducts);
+    mockRepo.findProductsByCategory.mockResolvedValue(testPaginatedResponse);
 
-    const result = await findProductsByCategory("cat123", mockRepo);
+    const result = await findProductsByCategory(
+      "cat123",
+      testPage,
+      testLimit,
+      mockRepo
+    );
 
-    expect(mockRepo.findProductsByCategory).toHaveBeenCalledWith("cat123");
-    expect(result).toEqual(mockProducts);
+    expect(mockRepo.findProductsByCategory).toHaveBeenCalledWith(
+      "cat123",
+      testPage,
+      testLimit
+    );
+    expect(result).toEqual(testPaginatedResponse);
   });
   it("should update a product and return it", async () => {
     mockRepo.update.mockResolvedValue(updated);

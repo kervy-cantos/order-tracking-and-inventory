@@ -44,16 +44,31 @@ export const categoryRepositoryImpl: CategoryRepository = {
     };
   },
 
-  async findAll() {
-    const docs = await CategoryModel.find();
+  async findAll(page, limit) {
+    const skip = (page - 1) * limit;
 
-    return docs.map((doc) => ({
+    const [docs, total] = await Promise.all([
+      CategoryModel.find().skip(skip).limit(limit),
+      CategoryModel.countDocuments(),
+    ]);
+    const data = docs.map((doc) => ({
       id: doc._id.toString(),
       name: doc.name,
       description: doc.description ?? undefined,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     }));
+    if (page > Math.ceil(total / limit)) {
+      throw new Error("Page does not exist");
+    }
+
+    return {
+      data,
+      total,
+      totalPages: Math.ceil(total / limit),
+      resultCount: data.length,
+      page,
+    };
   },
 
   async delete(id) {

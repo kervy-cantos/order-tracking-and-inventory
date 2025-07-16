@@ -10,7 +10,10 @@ export default function categoryRouter() {
   const router = Router();
 
   router.get("/", async (req: Request, res: Response) => {
-    const response = await findAllController();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    const response = await findAllController(page, limit);
     res.status(response.status).json(response.body);
   });
 

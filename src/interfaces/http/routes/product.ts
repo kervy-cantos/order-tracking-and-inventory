@@ -10,7 +10,9 @@ export default function productRouter() {
   const router = Router();
 
   router.get("/", async (req: Request, res: Response) => {
-    const response = await findAllProductsController();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const response = await findAllProductsController(page, limit);
     res.status(response.status).json(response.body);
   });
 
@@ -22,7 +24,9 @@ export default function productRouter() {
 
   router.get("/category/:id", async (req: Request, res: Response) => {
     const { id } = req.params;
-    const response = await findProductsByCategoryController(id);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const response = await findProductsByCategoryController(id, page, limit);
     res.status(response.status).json(response.body);
   });
 

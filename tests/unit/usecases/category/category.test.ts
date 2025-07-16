@@ -80,8 +80,9 @@ describe("Category Usecases", () => {
 
     expect(result).toBe(false);
   });
-
-  it("should return a list of categories (0 or more)", async () => {
+  it("should return a paginated list of categories (0 or more)", async () => {
+    const testPage = 2;
+    const testLimit = 10;
     const mockCategories = [
       {
         id: "cat1",
@@ -99,13 +100,46 @@ describe("Category Usecases", () => {
       },
     ];
 
-    categoryRepo.findAll.mockResolvedValue(mockCategories);
+    const mockPaginatedResponse = {
+      data: mockCategories,
+      total: 25,
+      totalPages: 3,
+      resultCount: mockCategories.length,
+      limit: testLimit,
+      page: testPage,
+    };
 
-    const result = await findAllCategories(categoryRepo);
+    categoryRepo.findAll.mockResolvedValue(mockPaginatedResponse);
 
-    expect(categoryRepo.findAll).toHaveBeenCalled();
-    expect(Array.isArray(result)).toBe(true);
-    expect(result).toEqual(mockCategories);
-    expect(result.length).toBeGreaterThanOrEqual(0);
+    const result = await findAllCategories(testPage, testLimit, categoryRepo);
+
+    expect(categoryRepo.findAll).toHaveBeenCalledWith(testPage, testLimit);
+    expect(Array.isArray(result.data)).toBe(true);
+    expect(result.data).toEqual(mockCategories);
+    expect(result.resultCount).toBeGreaterThanOrEqual(0);
+    expect(result.total).toBe(mockPaginatedResponse.total);
+    expect(result.totalPages).toBe(mockPaginatedResponse.totalPages);
+  });
+  it("should return an empty list if no categories exist", async () => {
+    const testPage = 1;
+    const testLimit = 10;
+
+    const mockEmptyResponse = {
+      data: [],
+      page: 0,
+      total: 0,
+      totalPages: 0,
+      resultCount: 0,
+    };
+
+    categoryRepo.findAll.mockResolvedValue(mockEmptyResponse);
+
+    const result = await findAllCategories(testPage, testLimit, categoryRepo);
+
+    expect(categoryRepo.findAll).toHaveBeenCalledWith(testPage, testLimit);
+    expect(result.data).toEqual([]);
+    expect(result.total).toBe(0);
+    expect(result.totalPages).toBe(0);
+    expect(result.resultCount).toBe(0);
   });
 });

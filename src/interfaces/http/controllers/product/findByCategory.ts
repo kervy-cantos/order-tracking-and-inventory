@@ -3,10 +3,17 @@ import { findProductsByCategory } from "../../../../usecases/product/findProduct
 import { productRepositoryImpl } from "../../../../frameworks/mongoose/repositories/impl/product";
 
 export async function findProductsByCategoryController(
-  id: string
+  id: string,
+  page: number,
+  limit: number
 ): Promise<ControllerResponse> {
   try {
-    const data = await findProductsByCategory(id, productRepositoryImpl);
+    const data = await findProductsByCategory(
+      id,
+      page,
+      limit,
+      productRepositoryImpl
+    );
     if (!data) {
       return {
         status: 400,
@@ -20,7 +27,12 @@ export async function findProductsByCategoryController(
       status: 200,
       body: {
         message: "Fetched successfully",
-        data,
+        data: data.data,
+        total: data.total,
+        totalPages: data.totalPages,
+        resultCount: data.resultCount,
+        limit,
+        page,
       },
     };
   } catch (error) {
