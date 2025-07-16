@@ -5,9 +5,10 @@
 - 🔐 Authentication with **JWT (access & refresh tokens)**
 - 🗃️ MongoDB with Mongoose ODM
 - 👤 Support for local and future OAuth logins
-- 🏷️ Category and Product entities (modular domain-driven design)
-- 📦 Full CRUD for Category (extendable to Products and Orders)
+- 🏷️ Category and Product entities 
+- 📦 Full CRUD for Category and Products
 - ✅ Middleware-based auth (with global typing for `req.user`)
+- ✅ Server side pagination support
 - ⚙️ CI/CD using **GitHub Actions** and **Railway**
 
 ## 📁 Project Structure
