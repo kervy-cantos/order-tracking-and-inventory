@@ -4,4 +4,6 @@ export interface AuthTokenPayload {
   role: "user" | "admin";
   provider: "local" | "google";
   sub?: string;
+  exp?: number;
+  iat?: number;
 }

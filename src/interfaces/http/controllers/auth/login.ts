@@ -10,14 +10,17 @@ export async function loginController(
 ): Promise<ControllerResponse> {
   try {
     const input = sanitizeLoginInput(body);
-    const user = await loginUser(input, userRepositoryImpl, JwtTokenService);
+    const login = await loginUser(input, userRepositoryImpl, JwtTokenService);
 
+    const { user, token, refreshToken } = login;
     return {
-      status: 201,
+      status: 200,
       body: {
         message: "User logged in successfully",
         data: {
           user,
+          token,
+          refreshToken,
         },
       },
     };
